@@ -1,9 +1,5 @@
 package com.example.smartpantrymanager;
 
-import android.app.Activity;
-
-public class MainActivity extends Activity {
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -29,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerViewPantry;
     private TextView tvEmptyPantry;
     private FloatingActionButton fabAddPantry;
+    private View btnSuggestedRecipes;
+    private View btnSettings;
     private DatabaseHelper dbHelper;
     private PantryAdapter pantryAdapter;
     private List<PantryItem> pantryList;
@@ -42,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewPantry = findViewById(R.id.recyclerViewPantry);
         tvEmptyPantry = findViewById(R.id.tvEmptyPantry);
         fabAddPantry = findViewById(R.id.fabAddPantry);
+        btnSuggestedRecipes = findViewById(R.id.btnSuggestedRecipes);
+        btnSettings = findViewById(R.id.btnSettings);
 
         recyclerViewPantry.setLayoutManager(new LinearLayoutManager(this));
         pantryList = new ArrayList<>();
@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, AddEditIngredientActivity.class);
             startActivity(intent);
         });
+        btnSuggestedRecipes.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, SuggestedRecipesActivity.class)));
+        btnSettings.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
     }
 
     @Override
@@ -175,4 +179,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-

@@ -14,3 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Smart Pantry Manager"
 include ':app'
+project(':app').projectDir = file('SmartPantryManager/app')

@@ -1,6 +1,4 @@
 package com.example.smartpantrymanager;
-//dont forget to make sure that the package name is correct and matches your project structure future me cause we push this a tad bit tire!
-public class DatabaseHelper {package com.example.smartpantrymanager;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -226,5 +224,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_RI_QTY, qty);
         db.insert(TABLE_RECIPE_INGREDIENTS, null, values);
     }
-}
 }
