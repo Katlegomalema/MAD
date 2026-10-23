@@ -1,0 +1,119 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.smartpantrymanager"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="34" />
+10
+11    <permission
+11-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/2c572bfdb425e6c1375d05070450f3cb/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
+12        android:name="com.example.smartpantrymanager.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+12-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/2c572bfdb425e6c1375d05070450f3cb/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
+13        android:protectionLevel="signature" />
+13-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/2c572bfdb425e6c1375d05070450f3cb/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
+14
+15    <uses-permission android:name="com.example.smartpantrymanager.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+15-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/2c572bfdb425e6c1375d05070450f3cb/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
+15-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/2c572bfdb425e6c1375d05070450f3cb/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
+16
+17    <application
+17-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:5:5-45:19
+18        android:allowBackup="true"
+18-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:6:9-35
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.9.0] /home/codespace/.gradle/caches/transforms-3/2c572bfdb425e6c1375d05070450f3cb/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
+20        android:debuggable="true"
+21        android:extractNativeLibs="false"
+22        android:label="@string/app_name"
+22-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:7:9-41
+23        android:supportsRtl="true"
+23-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:8:9-35
+24        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" >
+24-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:9:9-68
+25
+26        <!-- Main Pantry List Activity (App s entry part ) -->
+27        <activity
+27-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:12:9-19:20
+28            android:name="com.example.smartpantrymanager.MainActivity"
+28-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:13:13-41
+29            android:exported="true" >
+29-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:14:13-36
+30            <intent-filter>
+30-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:15:13-18:29
+31                <action android:name="android.intent.action.MAIN" />
+31-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:16:17-69
+31-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:16:25-66
+32
+33                <category android:name="android.intent.category.LAUNCHER" />
+33-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:17:17-77
+33-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:17:27-74
+34            </intent-filter>
+35        </activity>
+36
+37        <!-- Add and edit ingredient Form Activity -->
+38        <activity
+38-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:22:9-25:58
+39            android:name="com.example.smartpantrymanager.AddEditIngredientActivity"
+39-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:23:13-54
+40            android:exported="false"
+40-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:24:13-37
+41            android:parentActivityName="com.example.smartpantrymanager.MainActivity" />
+41-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:25:13-55
+42
+43        <!-- Strict-Matching Suggested Recipes activity -->
+44        <activity
+44-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:28:9-31:58
+45            android:name="com.example.smartpantrymanager.SuggestedRecipesActivity"
+45-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:29:13-53
+46            android:exported="false"
+46-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:30:13-37
+47            android:parentActivityName="com.example.smartpantrymanager.MainActivity" />
+47-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:31:13-55
+48
+49        <!-- Recipe Detail Step by Step Activity -->
+50        <activity
+50-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:34:9-37:70
+51            android:name="com.example.smartpantrymanager.RecipeDetailActivity"
+51-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:35:13-49
+52            android:exported="false"
+52-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:36:13-37
+53            android:parentActivityName="com.example.smartpantrymanager.SuggestedRecipesActivity" />
+53-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:37:13-67
+54
+55        <!-- Settings and Database Reset Activity -->
+56        <activity
+56-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:40:9-43:58
+57            android:name="com.example.smartpantrymanager.SettingsActivity"
+57-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:41:13-45
+58            android:exported="false"
+58-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:42:13-37
+59            android:parentActivityName="com.example.smartpantrymanager.MainActivity" />
+59-->/workspaces/MAD/SmartPantryManager/app/src/main/AndroidManifest.xml:43:13-55
+60
+61        <provider
+61-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/3873d6d2ba7e1f3538353a4cb47faf59/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+62            android:name="androidx.startup.InitializationProvider"
+62-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/3873d6d2ba7e1f3538353a4cb47faf59/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+63            android:authorities="com.example.smartpantrymanager.androidx-startup"
+63-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/3873d6d2ba7e1f3538353a4cb47faf59/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+64            android:exported="false" >
+64-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/3873d6d2ba7e1f3538353a4cb47faf59/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+65            <meta-data
+65-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/3873d6d2ba7e1f3538353a4cb47faf59/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+66                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+66-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/3873d6d2ba7e1f3538353a4cb47faf59/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+67                android:value="androidx.startup" />
+67-->[androidx.emoji2:emoji2:1.2.0] /home/codespace/.gradle/caches/transforms-3/3873d6d2ba7e1f3538353a4cb47faf59/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+68            <meta-data
+68-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/codespace/.gradle/caches/transforms-3/4e626f53862bd86d5c0bf8209c7aefa6/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
+69                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+69-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/codespace/.gradle/caches/transforms-3/4e626f53862bd86d5c0bf8209c7aefa6/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
+70                android:value="androidx.startup" />
+70-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/codespace/.gradle/caches/transforms-3/4e626f53862bd86d5c0bf8209c7aefa6/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
+71        </provider>
+72    </application>
+73
+74</manifest>

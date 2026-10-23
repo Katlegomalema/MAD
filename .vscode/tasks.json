@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build Smart Pantry debug APK",
+			"type": "shell",
+			"command": "./gradlew",
+			"args": [
+				"--no-daemon",
+				"--max-workers=1",
+				"-Dorg.gradle.jvmargs=-Xmx256m -XX:MaxMetaspaceSize=192m",
+				"assembleDebug"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build",
+			"options": {
+				"env": {
+					"ANDROID_HOME": "/home/codespace/android-sdk",
+					"ANDROID_SDK_ROOT": "/home/codespace/android-sdk",
+					"JAVA_HOME": "/usr/local/sdkman/candidates/java/21.0.12+1-ms"
+				}
+			}
+		}
+	]
+}
