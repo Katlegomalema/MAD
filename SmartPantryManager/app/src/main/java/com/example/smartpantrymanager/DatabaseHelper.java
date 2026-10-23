@@ -1,5 +1,5 @@
 package com.example.smartpantrymanager;
-
+// future me: keep names lowercase so recipe matching doesn't get picky about capitals!
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -82,6 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean insertPantryItem(String name, double quantity, String unit, String expiry) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        // future me: keep names lowercase so recipe matching doesn't get picky about capitals!
         values.put(COL_PANTRY_NAME, name.toLowerCase().trim());
         values.put(COL_PANTRY_QTY, quantity);
         values.put(COL_PANTRY_UNIT, unit);
