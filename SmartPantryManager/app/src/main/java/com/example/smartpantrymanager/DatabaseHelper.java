@@ -6,10 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "smart_pantry.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Table Names
     public static final String TABLE_PANTRY = "pantry";
@@ -33,6 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_RI_RECIPE_ID = "recipe_id";
     public static final String COL_RI_ING_NAME = "ingredient_name";
     public static final String COL_RI_QTY = "required_quantity";
+    public static final String COL_RI_UNIT = "required_unit";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -62,6 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_RI_RECIPE_ID + " INTEGER, " +
                 COL_RI_ING_NAME + " TEXT, " +
                 COL_RI_QTY + " REAL, " +
+                COL_RI_UNIT + " TEXT, " +
                 "FOREIGN KEY(" + COL_RI_RECIPE_ID + ") REFERENCES " + TABLE_RECIPES + "(" + COL_RECIPE_ID + "))";
         db.execSQL(createRecipeIngredientsTable);
 
@@ -71,10 +77,133 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PANTRY);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPE_INGREDIENTS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + TABLE_RECIPE_INGREDIENTS + " ADD COLUMN " + COL_RI_UNIT + " TEXT");
+            db.execSQL("UPDATE " + TABLE_RECIPE_INGREDIENTS + " SET " + COL_RI_UNIT +
+                    " = CASE " +
+                    "WHEN " + COL_RI_ING_NAME + " IN ('eggs', 'bread', 'avocado', 'tomatoes', 'onions') THEN 'pcs' " +
+                    "WHEN " + COL_RI_ING_NAME + " = 'garlic' THEN 'cloves' " +
+                    "WHEN " + COL_RI_ING_NAME + " = 'butter' THEN 'tbsp' " +
+                    "WHEN " + COL_RI_ING_NAME + " = 'coffee' THEN 'tsp' " +
+                    "WHEN " + COL_RI_ING_NAME + " = 'milk' THEN 'ml' " +
+                    "ELSE 'g' END");
+        }
+    }
+
+    public Cursor getRecipeIngredients(int recipeId) {
+        return getReadableDatabase().query(
+                TABLE_RECIPE_INGREDIENTS,
+                new String[]{COL_RI_ING_NAME, COL_RI_QTY, COL_RI_UNIT},
+                COL_RI_RECIPE_ID + " = ?",
+                new String[]{String.valueOf(recipeId)},
+                null,
+                null,
+                COL_RI_ID);
+    }
+
+    public boolean hasSufficientIngredients(int recipeId) {
+        Map<String, PantryStock> pantryStock = new HashMap<>();
+        try (Cursor pantryCursor = getAllPantryItems()) {
+            while (pantryCursor.moveToNext()) {
+                String name = normalize(pantryCursor.getString(
+                        pantryCursor.getColumnIndexOrThrow(COL_PANTRY_NAME)));
+                if (!name.isEmpty()) {
+                    pantryStock.put(name, new PantryStock(
+                            pantryCursor.getDouble(pantryCursor.getColumnIndexOrThrow(COL_PANTRY_QTY)),
+                            pantryCursor.getString(pantryCursor.getColumnIndexOrThrow(COL_PANTRY_UNIT))));
+                }
+            }
+        }
+
+        boolean hasIngredients = false;
+        try (Cursor ingredientCursor = getRecipeIngredients(recipeId)) {
+            while (ingredientCursor.moveToNext()) {
+                hasIngredients = true;
+                String name = normalize(ingredientCursor.getString(
+                        ingredientCursor.getColumnIndexOrThrow(COL_RI_ING_NAME)));
+                PantryStock stock = pantryStock.get(name);
+                double requiredQuantity = ingredientCursor.getDouble(
+                        ingredientCursor.getColumnIndexOrThrow(COL_RI_QTY));
+                String requiredUnit = ingredientCursor.getString(
+                        ingredientCursor.getColumnIndexOrThrow(COL_RI_UNIT));
+                Double availableQuantity = stock == null
+                        ? null
+                        : convertQuantity(stock.quantity, stock.unit, requiredUnit);
+                if (availableQuantity == null || !Double.isFinite(availableQuantity) ||
+                        !Double.isFinite(requiredQuantity) || requiredQuantity <= 0 ||
+                        availableQuantity < requiredQuantity) {
+                    return false;
+                }
+            }
+        }
+        return hasIngredients;
+    }
+
+    private static String normalize(String value) {
+        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private static Double convertQuantity(double quantity, String pantryUnit, String requiredUnit) {
+        String from = normalizeUnit(pantryUnit);
+        String to = normalizeUnit(requiredUnit);
+        if (from.equals(to)) {
+            return quantity;
+        }
+        if ("kg".equals(from) && "g".equals(to)) {
+            return quantity * 1000;
+        }
+        if ("g".equals(from) && "kg".equals(to)) {
+            return quantity / 1000;
+        }
+        if ("l".equals(from) && "ml".equals(to)) {
+            return quantity * 1000;
+        }
+        if ("ml".equals(from) && "l".equals(to)) {
+            return quantity / 1000;
+        }
+        return null;
+    }
+
+    private static String normalizeUnit(String unit) {
+        String normalized = normalize(unit).replace(".", "");
+        if ("piece".equals(normalized) || "pieces".equals(normalized) ||
+                "pc".equals(normalized)) {
+            return "pcs";
+        }
+        if ("clove".equals(normalized)) {
+            return "cloves";
+        }
+        if ("tablespoon".equals(normalized) || "tablespoons".equals(normalized)) {
+            return "tbsp";
+        }
+        if ("teaspoon".equals(normalized) || "teaspoons".equals(normalized)) {
+            return "tsp";
+        }
+        if ("gram".equals(normalized) || "grams".equals(normalized)) {
+            return "g";
+        }
+        if ("kilogram".equals(normalized) || "kilograms".equals(normalized) || "kgs".equals(normalized)) {
+            return "kg";
+        }
+        if ("milliliter".equals(normalized) || "milliliters".equals(normalized) ||
+                "millilitre".equals(normalized) || "millilitres".equals(normalized)) {
+            return "ml";
+        }
+        if ("liter".equals(normalized) || "liters".equals(normalized) ||
+                "litre".equals(normalized) || "litres".equals(normalized)) {
+            return "l";
+        }
+        return normalized;
+    }
+
+    private static class PantryStock {
+        final double quantity;
+        final String unit;
+
+        PantryStock(double quantity, String unit) {
+            this.quantity = quantity;
+            this.unit = unit;
+        }
     }
 
     // --- PANTRY CRUD OPERATIONS ---
@@ -223,6 +352,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_RI_RECIPE_ID, recipeId);
         values.put(COL_RI_ING_NAME, ingredientName.toLowerCase().trim());
         values.put(COL_RI_QTY, qty);
+        values.put(COL_RI_UNIT, getRecipeUnit(ingredientName));
         db.insert(TABLE_RECIPE_INGREDIENTS, null, values);
+    }
+
+    private String getRecipeUnit(String ingredientName) {
+        switch (ingredientName) {
+            case "eggs":
+            case "bread":
+            case "avocado":
+            case "tomatoes":
+            case "onions":
+                return "pcs";
+            case "garlic":
+                return "cloves";
+            case "butter":
+                return "tbsp";
+            case "coffee":
+                return "tsp";
+            case "milk":
+                return "ml";
+            default:
+                return "g";
+        }
     }
 }

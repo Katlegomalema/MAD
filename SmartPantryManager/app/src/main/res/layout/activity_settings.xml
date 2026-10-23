@@ -1,23 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@color/screen_background"
     android:gravity="center_horizontal">
 
-    <Button
-        android:id="@+id/btnResetDatabase"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reset Database &amp; Reload Recipes"
-        android:layout_marginBottom="16dp" />
+        android:text="A little housekeeping"
+        android:textColor="@color/text_primary"
+        android:textSize="26sp"
+        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btnAppInfo"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="About App" />
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="20dp"
+        android:text="Manage your pantry app."
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_content_card"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnResetDatabase"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Reset database &amp; reload recipes"
+            android:textAllCaps="false"
+            android:textColor="@color/color_primary"
+            app:cornerRadius="14dp"
+            app:strokeColor="@color/outline_subtle" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAppInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="About this app"
+            android:textAllCaps="false"
+            app:cornerRadius="14dp" />
+    </LinearLayout>
 
 </LinearLayout>

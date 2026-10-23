@@ -5,61 +5,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="20dp"
+    android:background="@color/screen_background"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnSuggestedRecipes"
+    <TextView
+        android:id="@+id/tvPantryHeading"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Suggested Recipes"
+        android:text="Your pantry"
+        android:textColor="@color/text_primary"
+        android:textSize="28sp"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tvPantrySubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Keep track of what you have, cook more with it."
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tvPantryHeading"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSuggestedRecipes"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="20dp"
+        android:text="Find a recipe"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        app:cornerRadius="14dp"
+        app:icon="@android:drawable/ic_menu_search"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvPantrySubtitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnSettings" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="104dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
         android:text="Settings"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textAllCaps="false"
+        android:textColor="@color/color_primary"
+        app:cornerRadius="14dp"
+        app:strokeColor="@color/outline_subtle"
+        app:layout_constraintTop_toBottomOf="@id/tvPantrySubtitle"
         app:layout_constraintStart_toEndOf="@id/btnSuggestedRecipes"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- RecyclerView to display all current pantry items from SQLite -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPantry"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:paddingBottom="88dp"
         app:layout_constraintTop_toBottomOf="@id/btnSuggestedRecipes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- THE Coming Feedback message when zero items are in the pantry -->
     <TextView
         android:id="@+id/tvEmptyPantry"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Your pantry is currently empty. Tap '+' to add ingredients!"
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_content_card"
         android:gravity="center"
+        android:padding="28dp"
+        android:text="Your pantry is ready for its first ingredient.\nTap + to add something you have."
+        android:textColor="@color/text_secondary"
+        android:textSize="16sp"
+        android:lineSpacingExtra="5dp"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnSuggestedRecipes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- THE Floating Action Button to Add New Ingredient -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddPantry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="12dp"
         android:contentDescription="Add new pantry item"
         android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/color_primary"
+        app:tint="@color/card_background"
+        app:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

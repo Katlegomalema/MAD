@@ -1,5 +1,12 @@
 <resources>
-    <color name="color_primary">#2E7D32</color>
-    <color name="color_primary_dark">#1B5E20</color>
-    <color name="color_accent">#FFB300</color>
+    <color name="color_primary">#287A55</color>
+    <color name="color_primary_dark">#18543A</color>
+    <color name="color_accent">#E7A83E</color>
+    <color name="screen_background">#F5F6F1</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="text_primary">#20352A</color>
+    <color name="text_secondary">#718077</color>
+    <color name="soft_green">#E8F2EB</color>
+    <color name="soft_gold">#FBF2E3</color>
+    <color name="outline_subtle">#DCE4DC</color>
 </resources>

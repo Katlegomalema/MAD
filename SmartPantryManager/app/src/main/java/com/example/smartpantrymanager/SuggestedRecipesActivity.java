@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class SuggestedRecipesActivity extends AppCompatActivity {
 
@@ -30,7 +28,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggested_recipes);
-        setTitle("Suggested Recipes (Strict Match)");
+        setTitle("Suggested Recipes");
 
         dbHelper = new DatabaseHelper(this);
         recyclerViewRecipes = findViewById(R.id.recyclerViewRecipes);
@@ -45,53 +43,25 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
     private void loadStrictMatchedRecipes() {
         matchedRecipeList.clear();
 
-        // 1. Collect all ingredient names currently available in the pantry
-        Set<String> pantryIngredients = new HashSet<>();
-        Cursor pantryCursor = dbHelper.getAllPantryItems();
-        if (pantryCursor != null && pantryCursor.moveToFirst()) {
-            do {
-                String name = pantryCursor.getString(pantryCursor.getColumnIndexOrThrow(DatabaseHelper.COL_PANTRY_NAME));
-                if (name != null) {
-                    pantryIngredients.add(name.toLowerCase().trim());
-                }
-            } while (pantryCursor.moveToNext());
-            pantryCursor.close();
-        }
-
-        // 2. Fetch all recipes from the database
-        Cursor recipeCursor = dbHelper.getReadableDatabase().rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_RECIPES, null);
-        if (recipeCursor != null && recipeCursor.moveToFirst()) {
-            do {
+        try (Cursor recipeCursor = dbHelper.getReadableDatabase().query(
+                DatabaseHelper.TABLE_RECIPES,
+                new String[]{DatabaseHelper.COL_RECIPE_ID, DatabaseHelper.COL_RECIPE_NAME, DatabaseHelper.COL_RECIPE_STEPS},
+                null,
+                null,
+                null,
+                null,
+                DatabaseHelper.COL_RECIPE_NAME)) {
+            while (recipeCursor.moveToNext()) {
                 int recipeId = recipeCursor.getInt(recipeCursor.getColumnIndexOrThrow(DatabaseHelper.COL_RECIPE_ID));
                 String recipeName = recipeCursor.getString(recipeCursor.getColumnIndexOrThrow(DatabaseHelper.COL_RECIPE_NAME));
                 String prepSteps = recipeCursor.getString(recipeCursor.getColumnIndexOrThrow(DatabaseHelper.COL_RECIPE_STEPS));
 
-                // 3. Fetch required ingredients for the current recipe
-                List<String> requiredIngredients = new ArrayList<>();
-                Cursor reqCursor = dbHelper.getReadableDatabase().rawQuery(
-                        "SELECT " + DatabaseHelper.COL_RI_ING_NAME + " FROM " + DatabaseHelper.TABLE_RECIPE_INGREDIENTS +
-                                " WHERE " + DatabaseHelper.COL_RI_RECIPE_ID + " = ?", new String[]{String.valueOf(recipeId)});
-
-                if (reqCursor != null && reqCursor.moveToFirst()) {
-                    do {
-                        String reqIng = reqCursor.getString(reqCursor.getColumnIndexOrThrow(DatabaseHelper.COL_RI_ING_NAME));
-                        if (reqIng != null) {
-                            requiredIngredients.add(reqIng.toLowerCase().trim());
-                        }
-                    } while (reqCursor.moveToNext());
-                    reqCursor.close();
-                }
-
-                // 4. Strict Matching Algorithm: Pantry must contain ALL required ingredients
-                if (!requiredIngredients.isEmpty() && pantryIngredients.containsAll(requiredIngredients)) {
+                if (dbHelper.hasSufficientIngredients(recipeId)) {
                     matchedRecipeList.add(new RecipeItem(recipeId, recipeName, prepSteps));
                 }
-
-            } while (recipeCursor.moveToNext());
-            recipeCursor.close();
+            }
         }
 
-        // 5. Update UI based on match results
         if (matchedRecipeList.isEmpty()) {
             recyclerViewRecipes.setVisibility(View.GONE);
             tvNoRecipes.setVisibility(View.VISIBLE);
@@ -125,7 +95,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         @NonNull
         @Override
         public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_2, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recipe, parent, false);
             return new RecipeViewHolder(view);
         }
 
@@ -133,10 +103,11 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
             RecipeItem recipe = recipes.get(position);
             holder.text1.setText(recipe.name);
-            holder.text2.setText("Tap to view preparation steps");
+            holder.text2.setText("View ingredients and preparation");
 
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(SuggestedRecipesActivity.this, RecipeDetailActivity.class);
+                intent.putExtra("RECIPE_ID", recipe.id);
                 intent.putExtra("RECIPE_NAME", recipe.name);
                 intent.putExtra("RECIPE_STEPS", recipe.steps);
                 startActivity(intent);
@@ -153,8 +124,8 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
 
             public RecipeViewHolder(@NonNull View itemView) {
                 super(itemView);
-                text1 = itemView.findViewById(android.R.id.text1);
-                text2 = itemView.findViewById(android.R.id.text2);
+                text1 = itemView.findViewById(R.id.tvRecipeName);
+                text2 = itemView.findViewById(R.id.tvRecipeSummary);
             }
         }
     }

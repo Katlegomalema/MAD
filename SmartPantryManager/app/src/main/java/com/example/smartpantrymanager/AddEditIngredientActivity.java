@@ -53,9 +53,15 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         String unit = etUnit.getText().toString().trim();
         String expiry = etExpiry.getText().toString().trim();
 
-        // Validate required fields
-        if (name.isEmpty() || qtyStr.isEmpty() || unit.isEmpty()) {
-            Toast.makeText(this, "Please fill in all required fields (Name, Qty, Unit)", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty()) {
+            etName.setError("Ingredient name is required");
+            etName.requestFocus();
+            return;
+        }
+
+        if (qtyStr.isEmpty()) {
+            etQuantity.setError("Quantity is required");
+            etQuantity.requestFocus();
             return;
         }
 
@@ -63,9 +69,24 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         try {
             quantity = Double.parseDouble(qtyStr);
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Please enter a valid number for quantity", Toast.LENGTH_SHORT).show();
+            etQuantity.setError("Enter a valid quantity");
+            etQuantity.requestFocus();
             return;
         }
+        if (!Double.isFinite(quantity) || quantity <= 0) {
+            etQuantity.setError("Quantity must be a positive number");
+            etQuantity.requestFocus();
+            return;
+        }
+
+        if (unit.isEmpty()) {
+            etUnit.setError("Unit is required");
+            etUnit.requestFocus();
+            return;
+        }
+        etName.setError(null);
+        etQuantity.setError(null);
+        etUnit.setError(null);
 
         boolean success;
         if (isEditMode) {
