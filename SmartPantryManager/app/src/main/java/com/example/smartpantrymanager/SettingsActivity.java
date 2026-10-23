@@ -1,5 +1,6 @@
 package com.example.smartpantrymanager;
 
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -29,8 +30,12 @@ public class SettingsActivity extends AppCompatActivity {
                         .setTitle("Reset Pantry & Recipes")
                         .setMessage("This will reset your database and reload default recipes. Are you sure?")
                         .setPositiveButton("Yes", (dialog, which) -> {
-                            dbHelper.onUpgrade(dbHelper.getWritableDatabase(), 1, 1);
-                            Toast.makeText(this, "Database reset and re-seeded successfully", Toast.LENGTH_SHORT).show();
+                            try {
+                                dbHelper.resetData();
+                                Toast.makeText(this, "Database reset and re-seeded successfully", Toast.LENGTH_SHORT).show();
+                            } catch (SQLiteException e) {
+                                Toast.makeText(this, "Unable to reset the database", Toast.LENGTH_SHORT).show();
+                            }
                         })
                         .setNegativeButton("No", null)
                         .show();

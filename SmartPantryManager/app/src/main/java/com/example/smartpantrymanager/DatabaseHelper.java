@@ -90,6 +90,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void resetData() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.delete(TABLE_RECIPE_INGREDIENTS, null, null);
+            db.delete(TABLE_RECIPES, null, null);
+            db.delete(TABLE_PANTRY, null, null);
+            seedInitialData(db);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public Cursor getRecipeIngredients(int recipeId) {
         return getReadableDatabase().query(
                 TABLE_RECIPE_INGREDIENTS,
@@ -105,7 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Map<String, PantryStock> pantryStock = new HashMap<>();
         try (Cursor pantryCursor = getAllPantryItems()) {
             while (pantryCursor.moveToNext()) {
-                String name = normalize(pantryCursor.getString(
+                String name = normalizeIngredientName(pantryCursor.getString(
                         pantryCursor.getColumnIndexOrThrow(COL_PANTRY_NAME)));
                 if (!name.isEmpty()) {
                     pantryStock.put(name, new PantryStock(
@@ -119,7 +133,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try (Cursor ingredientCursor = getRecipeIngredients(recipeId)) {
             while (ingredientCursor.moveToNext()) {
                 hasIngredients = true;
-                String name = normalize(ingredientCursor.getString(
+                String name = normalizeIngredientName(ingredientCursor.getString(
                         ingredientCursor.getColumnIndexOrThrow(COL_RI_ING_NAME)));
                 PantryStock stock = pantryStock.get(name);
                 double requiredQuantity = ingredientCursor.getDouble(
@@ -141,6 +155,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static String normalize(String value) {
         return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private static String normalizeIngredientName(String value) {
+        String name = normalize(value);
+        if (name.length() > 4 && name.endsWith("ies")) {
+            return name.substring(0, name.length() - 3) + "y";
+        }
+        if (name.length() > 4 && name.endsWith("oes")) {
+            return name.substring(0, name.length() - 2);
+        }
+        if (name.length() > 3 && name.endsWith("s") &&
+                !name.endsWith("ss") && !name.endsWith("us") && !name.endsWith("is")) {
+            return name.substring(0, name.length() - 1);
+        }
+        return name;
     }
 
     private static Double convertQuantity(double quantity, String pantryUnit, String requiredUnit) {
