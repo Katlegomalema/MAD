@@ -1,33 +1,33 @@
-# Smart Pantry Manager 🥗📱
+# Smart Pantry Manager
 
-Smart Pantry Manager is an Android application designed to help users track their kitchen pantry inventory and automatically discover recipes they can cook based on the ingredients they currently have on hand.
+Smart Pantry Manager is an Android app that allows users to manage their pantry inventory and automatically suggest recipes that users can prepare using the ingredients in their pantry.
 
 ---
 
-## 🌟 Key Features
+## Key Features
 
 * **Pantry Inventory Management (CRUD):**
-  * View current pantry items with available quantities and units (e.g., grams, pieces, liters).
-  * Add new ingredients to the pantry.
-  * Edit existing ingredient details and update stock levels.
-  * Remove depleted ingredients from stock.
+  * Shows existing pantry items along with the available quantity and unit (grams, pieces, liters, etc.).
+  * Adds ingredients to the pantry.
+  * Edits existing ingredient information and updates the quantity.
+  * Deletes ingredients from the stock once they are finished.
 
 * **Smart Recipe Matcher:**
-  * Analyzes available pantry inventory against recipe requirement lists.
-  * Dynamically calculates available recipes based on ingredient existence and quantity sufficiency ($\text{Pantry Quantity} \ge \text{Recipe Quantity Required}$).
+  * Checks the available pantry inventory against the list of recipe requirements.
+  * Dynamically finds out the recipes which can be prepared using the availability of the ingredients and sufficient quantities ($\text{Pantry Quantity} \ge \text{Recipe Quantity Required}$).
 
 * **Recipe & Instruction Viewer:**
-  * View step-by-step cooking instructions.
-  * Detailed breakdown of required ingredients and exact quantities per recipe.
+  * Displays step-by-step cooking instructions.
+  * Breaks down the required ingredients and the exact quantities for each recipe.
 
 * **Local Database Storage:**
-  * Uses SQLite via Android's `SQLiteOpenHelper` for reliable offline persistent storage.
+  * Uses SQLite through Android `SQLiteOpenHelper`.
 
 ---
 
-## 🏗️ Architecture & Component Overview
+## Architecture & Component Overview
 
-The application follows standard Android architecture patterns with activity-driven UI screens and a centralized database helper class.
+The app uses the standard Android architecture design principles with activity-based UI screens and a database helper class.
 
 ```
 SmartPantryManager/
@@ -55,7 +55,7 @@ SmartPantryManager/
 
 ---
 
-## 🚀 How to Build & Run
+##  How to Build & Run
 
 ### 1. Build via Terminal (Gradle)
 In your terminal or GitHub Codespaces environment, execute:
@@ -73,9 +73,3 @@ The compiled APK file will be output to:
 * **Web Emulators:** Upload `app-debug.apk` to an online testing emulator (such as Appetize.io or APKOnline).
 
 ---
-
-## 📋 Future Enhancements
-
-* Expiration date tracking and alerts for perishable pantry items.
-* Unit conversion engine (e.g., converting kg to grams automatically when matching recipes).
-* Cloud sync and multi-user shared household pantries.
